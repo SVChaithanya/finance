@@ -21,6 +21,13 @@ class TransactionSchema(BaseModel):
     category: str
     note: str | None = None
     date: datetime
+    @validator('date')
+    def date_must_be_past_or_today(cls, v):
+        now = datetime.now()
+        if v.date() > now.date():  # future day is not allowed
+            raise ValueError("Date cannot be in the future")
+        return v    
+    
 
 
 class UpdateTransactionSchema(BaseModel):
@@ -30,6 +37,12 @@ class UpdateTransactionSchema(BaseModel):
     category: str
     note: str | None = None
     date: datetime 
+    @validator('date')
+    def date_must_be_past_or_today(cls, v):
+        now = datetime.now()
+        if v.date() > now.date():  # future day is not allowed
+            raise ValueError("Date cannot be in the future")
+        return v
 
 class delete(BaseModel):
     transaction_id : str
